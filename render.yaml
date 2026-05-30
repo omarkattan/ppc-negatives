@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ppc-negative-keyword-tool
+    runtime: python
+    plan: starter            # avoid free-tier cold starts for a client-facing tool
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn apps.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: BASE_PATH
+        value: ""            # set to e.g. /ppc-negatives when behind a sub-path proxy
+      - key: BASIC_AUTH_USER
+        sync: false          # set in dashboard; enables auth when present
+      - key: BASIC_AUTH_PASS
+        sync: false

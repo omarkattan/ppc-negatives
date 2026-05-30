@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="__BASE_HREF__">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Negative Keyword Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#16140f; --paper:#f4efe6; --card:#fbf8f1; --line:#ddd3c0;
+      --sand:#c8a248; --sand-deep:#a07c2c; --teal:#1a6b8a; --rust:#b04a2f;
+      --muted:#6f6a5f; --ok:#3f7d4e; --warn:#b07f1f; --high:#b04a2f;
+      --shadow:0 1px 0 #fff inset, 0 18px 40px -28px rgba(40,30,10,.5);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+        radial-gradient(120% 80% at 100% 0%, #efe6d3 0%, transparent 55%),
+        var(--paper);
+      color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;
+      font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+    :lang(ar), [dir="rtl"]{font-family:"IBM Plex Sans Arabic","IBM Plex Sans",sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
+    header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;
+      border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:30px}
+    h1{font-family:"Fraunces",serif;font-weight:600;font-size:34px;line-height:1;margin:0;
+      letter-spacing:-.01em}
+    h1 .mark{color:var(--sand-deep)}
+    .sub{color:var(--muted);font-size:13px;font-family:"IBM Plex Mono",monospace;
+      text-transform:uppercase;letter-spacing:.12em;margin-top:8px}
+    .badge{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+      border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--muted);
+      background:var(--card)}
+    .grid{display:grid;grid-template-columns:330px 1fr;gap:26px;align-items:start}
+    @media(max-width:820px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+      padding:22px;box-shadow:var(--shadow)}
+    .card h2{font-family:"Fraunces",serif;font-weight:500;font-size:18px;margin:0 0 16px}
+    label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;
+      text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+    input[type=text],input[type=number]{width:100%;padding:10px 12px;border:1px solid var(--line);
+      border-radius:9px;background:#fff;font:inherit;color:var(--ink)}
+    input:focus{outline:none;border-color:var(--sand-deep);box-shadow:0 0 0 3px rgba(200,162,72,.2)}
+    .drop{border:1.5px dashed var(--sand-deep);border-radius:11px;padding:20px;text-align:center;
+      cursor:pointer;background:rgba(200,162,72,.06);transition:.15s}
+    .drop:hover{background:rgba(200,162,72,.12)}
+    .drop small{display:block;color:var(--muted);margin-top:6px;font-size:12px}
+    .file-name{font-family:"IBM Plex Mono",monospace;font-size:12px;margin-top:8px;color:var(--teal)}
+    button{font:inherit;font-weight:600;cursor:pointer;border:none;border-radius:10px;padding:12px 16px}
+    .run{width:100%;margin-top:20px;background:var(--ink);color:var(--paper);letter-spacing:.02em}
+    .run:hover{background:#000}
+    .run:disabled{opacity:.5;cursor:wait}
+    .ghost{background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px}
+    .ghost:hover{border-color:var(--ink)}
+    .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .stat{flex:1;min-width:120px;background:var(--card);border:1px solid var(--line);
+      border-radius:11px;padding:14px 16px}
+    .stat b{display:block;font-family:"Fraunces",serif;font-size:26px;line-height:1}
+    .stat span{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+    table{width:100%;border-collapse:collapse;font-size:13.5px}
+    thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
+      color:var(--muted);border-bottom:1px solid var(--ink);padding:10px 8px}
+    tbody td{padding:11px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+    tbody tr:hover{background:rgba(200,162,72,.05)}
+    .term{font-weight:600}
+    .term.ar{font-family:"IBM Plex Sans Arabic",sans-serif;direction:rtl;display:inline-block}
+    .pill{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.04em;
+      padding:3px 8px;border-radius:6px;white-space:nowrap}
+    .r-low{background:#e7f0e9;color:var(--ok)} .r-medium{background:#f6edd8;color:var(--warn)}
+    .r-high{background:#f6e2da;color:var(--high)}
+    .auto{color:var(--ok);font-weight:600} .noauto{color:var(--muted)}
+    .meta{color:var(--muted);font-size:12px;margin-top:3px}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;margin:6px 0 14px;gap:12px}
+    .empty{color:var(--muted);text-align:center;padding:50px 20px;font-style:italic}
+    .num{font-family:"IBM Plex Mono",monospace}
+    .chk{width:16px;height:16px;accent-color:var(--sand-deep)}
+    .err{background:#f6e2da;color:var(--high);border:1px solid #e0b8aa;border-radius:9px;
+      padding:12px 14px;margin-bottom:16px;font-size:13px}
+    .conf-bar{height:5px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden;width:60px}
+    .conf-bar i{display:block;height:100%;background:var(--sand-deep)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Negative Keyword <span class="mark">Engine</span></h1>
+      <div class="sub">Search-term intelligence &middot; English + Arabic</div>
+    </div>
+    <span class="badge" id="ver">approval-first</span>
+  </header>
+
+  <div class="grid">
+    <aside class="card">
+      <h2>1. Upload report</h2>
+      <div class="drop" id="drop" tabindex="0">
+        Drop search-terms CSV here
+        <small>or click to choose &middot; Google Ads export, UTF-8 or UTF-16</small>
+        <div class="file-name" id="fileName"></div>
+      </div>
+      <input type="file" id="file" accept=".csv,.tsv,.txt" hidden>
+
+      <label>Currency</label>
+      <input type="text" id="currency" value="AED">
+      <label>Target CPA (optional)</label>
+      <input type="number" id="targetCpa" placeholder="e.g. 45" step="any">
+      <label>Brand whitelist (never negate)</label>
+      <input type="text" id="brand" placeholder="Siyate, سيات">
+      <label>Money keywords (protect)</label>
+      <input type="text" id="positive" placeholder="oud perfume, عطور فاخرة">
+      <label>Competitor terms (optional)</label>
+      <input type="text" id="competitor" placeholder="comma separated">
+
+      <button class="run" id="run" disabled>Analyse search terms</button>
+    </aside>
+
+    <main>
+      <div id="error" class="err" style="display:none"></div>
+      <div id="stats" class="stats" style="display:none"></div>
+      <div class="toolbar">
+        <div class="sub" id="resultsLabel"></div>
+        <button class="ghost" id="exportBtn" style="display:none">Export selected to CSV</button>
+      </div>
+      <div class="card">
+        <div id="empty" class="empty">Upload a search-terms report to see recommended negatives, ranked by wasted spend prevented. Nothing is applied automatically.</div>
+        <table id="table" style="display:none">
+          <thead><tr>
+            <th><input type="checkbox" class="chk" id="selAll"></th>
+            <th>Suggested negative</th><th>Intent</th><th>Match / scope</th>
+            <th>Risk</th><th>Confidence</th><th>Auto</th><th>Save</th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let lastRecs = [];
+
+const isArabic = s => /[\u0600-\u06FF]/.test(s || "");
+const esc = s => (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+$('drop').addEventListener('click', () => $('file').click());
+$('drop').addEventListener('keydown', e => { if(e.key==='Enter') $('file').click(); });
+['dragover','dragenter'].forEach(ev => $('drop').addEventListener(ev, e => { e.preventDefault(); }));
+$('drop').addEventListener('drop', e => {
+  e.preventDefault();
+  if (e.dataTransfer.files.length) { $('file').files = e.dataTransfer.files; onFile(); }
+});
+$('file').addEventListener('change', onFile);
+
+function onFile(){
+  const f = $('file').files[0];
+  if (!f) return;
+  $('fileName').textContent = f.name;
+  $('run').disabled = false;
+}
+
+$('run').addEventListener('click', analyse);
+
+async function analyse(){
+  const f = $('file').files[0];
+  if (!f) return;
+  $('run').disabled = true; $('run').textContent = 'Analysing...';
+  $('error').style.display = 'none';
+  const fd = new FormData();
+  fd.append('file', f);
+  fd.append('currency', $('currency').value || 'AED');
+  fd.append('target_cpa', $('targetCpa').value || '');
+  fd.append('brand_whitelist', $('brand').value || '');
+  fd.append('positive_keywords', $('positive').value || '');
+  fd.append('competitor_terms', $('competitor').value || '');
+  try {
+    const res = await fetch('api/recommend', { method:'POST', body:fd });
+    if (!res.ok){ const e = await res.json().catch(()=>({detail:res.statusText}));
+      throw new Error(e.detail || 'Request failed'); }
+    const data = await res.json();
+    lastRecs = data.recommendations;
+    render(data);
+  } catch (err){
+    $('error').textContent = err.message; $('error').style.display = 'block';
+  } finally {
+    $('run').disabled = false; $('run').textContent = 'Analyse search terms';
+  }
+}
+
+function render(data){
+  const s = data.summary, cur = data.params.currency || 'AED';
+  const totalSave = data.recommendations.reduce((a,r)=>a+(r.estimated_impact.value||0),0);
+  $('stats').style.display = 'flex';
+  $('stats').innerHTML = `
+    <div class="stat"><b>${s.count}</b><span>suggestions</span></div>
+    <div class="stat"><b>${s.autopilot_safe}</b><span>auto-safe</span></div>
+    <div class="stat"><b>${s.high_risk}</b><span>high risk</span></div>
+    <div class="stat"><b class="num">${cur} ${Math.round(totalSave).toLocaleString()}</b><span>wasted spend flagged</span></div>`;
+  $('resultsLabel').textContent = `${data.params.term_count} terms analysed, ${data.params.clusters} clusters`;
+  $('empty').style.display = 'none';
+  $('table').style.display = 'table';
+  $('exportBtn').style.display = 'inline-block';
+
+  $('rows').innerHTML = data.recommendations.map((r,i) => {
+    const p = r.payload, neg = p.suggested_negative || '';
+    const conf = Math.round(r.confidence*100);
+    return `<tr>
+      <td><input type="checkbox" class="chk row-chk" data-i="${i}" ${r.autopilot_safe?'checked':''}></td>
+      <td><span class="term ${isArabic(neg)?'ar':''}">${esc(neg)}</span>
+          <div class="meta">${esc((r.explanation||'').slice(0,90))}...</div></td>
+      <td><span class="pill">${esc(p.intent||'-')}</span></td>
+      <td class="num">${esc(p.match_type||'')}<div class="meta">${esc(p.scope||'')}</div></td>
+      <td><span class="pill r-${r.risk_level}">${r.risk_level}</span></td>
+      <td><span class="num">${conf}%</span><div class="conf-bar"><i style="width:${conf}%"></i></div></td>
+      <td>${r.autopilot_safe?'<span class="auto">safe</span>':'<span class="noauto">review</span>'}</td>
+      <td class="num">${cur} ${Math.round(r.estimated_impact.value||0)}</td>
+    </tr>`;
+  }).join('');
+}
+
+$('selAll').addEventListener('change', e => {
+  document.querySelectorAll('.row-chk').forEach(c => c.checked = e.target.checked);
+});
+
+$('exportBtn').addEventListener('click', async () => {
+  const picked = [...document.querySelectorAll('.row-chk:checked')].map(c => lastRecs[+c.dataset.i]);
+  if (!picked.length){ alert('Select at least one suggestion.'); return; }
+  const res = await fetch('api/export', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ recommendations: picked })
+  });
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'negatives.csv'; a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
