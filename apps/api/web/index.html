@@ -80,6 +80,12 @@
       padding:12px 14px;margin-bottom:16px;font-size:13px}
     .conf-bar{height:5px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden;width:60px}
     .conf-bar i{display:block;height:100%;background:var(--sand-deep)}
+    .foot{margin-top:46px;padding-top:20px;border-top:1px solid var(--line);display:flex;
+      justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+      font-size:12.5px;color:var(--muted)}
+    .foot a{color:#17B143;text-decoration:none;font-weight:600}
+    .foot a:hover{text-decoration:underline}
+    .foot .prod{font-family:"IBM Plex Mono",monospace;letter-spacing:.03em}
   </style>
 </head>
 <body>
@@ -136,11 +142,17 @@
       </div>
     </main>
   </div>
+
+  <footer class="foot">
+    <span>&copy; <span id="yr">2026</span> Negative Keyword Engine</span>
+    <span class="prod">Another <a href="https://sandstormdigital.com" target="_blank" rel="noopener">Sandstorm Digital</a> Production</span>
+  </footer>
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
 let lastRecs = [];
+document.getElementById('yr').textContent = new Date().getFullYear();
 
 const isArabic = s => /[\u0600-\u06FF]/.test(s || "");
 const esc = s => (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
